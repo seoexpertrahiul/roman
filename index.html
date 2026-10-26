@@ -3,175 +3,53 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Social Login Demo</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      padding: 20px 16px;
-      background: #f0f2f5;
-      font-family: Arial, sans-serif;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 396px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .logo {
-      color: #1877f2;
-      font-size: 42px;
-      font-weight: bold;
-      letter-spacing: -1.5px;
-      margin: 18px 0 24px;
-    }
-
-    .card {
-      background: #fff;
-      padding: 18px 16px 22px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px #00000015;
-    }
-
-    .notice {
-      color: #606770;
-      font-size: 14px;
-      line-height: 1.5;
-      margin: 0 0 16px;
-    }
-
-    input {
-      display: block;
-      width: 100%;
-      padding: 15px 13px;
-      margin-bottom: 12px;
-      border: 1px solid #dddfe2;
-      border-radius: 6px;
-      font-size: 16px;
-      outline-color: #1877f2;
-    }
-
-    .login {
-      width: 100%;
-      padding: 13px;
-      border: none;
-      border-radius: 6px;
-      background: #1877f2;
-      color: white;
-      font-size: 19px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .forgot {
-      display: inline-block;
-      margin: 17px 0;
-      color: #1877f2;
-      font-size: 14px;
-      text-decoration: none;
-    }
-
-    .line {
-      border: 0;
-      border-top: 1px solid #dadde1;
-      margin: 4px 0 20px;
-    }
-
-    .create {
-      display: inline-block;
-      background: #42b72a;
-      color: #fff;
-      padding: 13px 18px;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .footer {
-      color: #737373;
-      font-size: 12px;
-      margin-top: 26px;
-    }
-
-    @media (max-width: 360px) {
-      body {
-        padding: 12px;
-      }
-
-      .logo {
-        font-size: 36px;
-      }
-
-      .card {
-        padding: 15px 12px 20px;
-      }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>টেস্ট ফর্ম</title>
 </head>
-
 <body>
-  <main class="container">
-    <div class="logo">SocialBook</div>
+  <h2>পরীক্ষামূলক তথ্য ফর্ম</h2>
 
-    <section class="card">
-      <p class="notice">
-        এটি একটি ডেমো লগইন পেজ।
-        এখানে আসল অ্যাকাউন্টের তথ্য দেবেন না।
-      </p>
+  <form id="testForm">
+    <label>কাল্পনিক নাম:</label><br>
+    <input name="name" required><br><br>
 
-      <form id="demoForm">
-        <input
-          type="text"
-          placeholder="ডেমো ইউজারনেম"
-          autocomplete="off"
-          required
-        >
+    <label>পরীক্ষামূলক ইমেইল:</label><br>
+    <input name="email" type="email" required><br><br>
 
-        <input
-          type="password"
-          placeholder="ডেমো পাসওয়ার্ড"
-          autocomplete="off"
-          required
-        >
+    <button type="submit">তথ্য পাঠাও</button>
+  </form>
 
-        <button class="login" type="submit">
-          ডেমো লগইন
-        </button>
-      </form>
-
-      <p id="message" role="status"></p>
-
-      <a class="forgot" href="#demo">
-        পাসওয়ার্ড সহায়তা
-      </a>
-
-      <hr class="line">
-
-      <a class="create" href="#demo">
-        নতুন ডেমো অ্যাকাউন্ট
-      </a>
-    </section>
-
-    <p class="footer">
-      শিক্ষামূলক প্রজেক্ট · কোনো তথ্য সংরক্ষণ করা হয় না
-    </p>
-  </main>
+  <p id="message"></p>
 
   <script>
-    document.getElementById("demoForm")
-      .addEventListener("submit", function(event) {
+    const scriptURL =
+      "https://script.google.com/macros/s/AKfycbwcgC8c61Mo3jvQWtPid2OmMQrcqwJ4F6VuhEB3wzG5gzp3ELwiG4pADXFT2O__4_Wx/exec";
+
+    document.getElementById("testForm")
+      .addEventListener("submit", async function(event) {
         event.preventDefault();
 
+        const form = event.target;
+        const data = new URLSearchParams(new FormData(form));
+
         document.getElementById("message").textContent =
-          "ডেমো সফল! কোনো তথ্য পাঠানো বা সংরক্ষণ করা হয়নি।";
+          "তথ্য পাঠানোর চেষ্টা হচ্ছে...";
+
+        try {
+          await fetch(scriptURL, {
+            method: "POST",
+            mode: "no-cors",
+            body: data
+          });
+
+          document.getElementById("message").textContent =
+            "অনুরোধ পাঠানো হয়েছে। Google Sheet খুলে তথ্য এসেছে কি না যাচাই করো।";
+
+          form.reset();
+        } catch (error) {
+          document.getElementById("message").textContent =
+            "পাঠানো যায়নি। ইন্টারনেট ও Apps Script deployment যাচাই করো।";
+        }
       });
   </script>
 </body>
